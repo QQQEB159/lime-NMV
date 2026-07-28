@@ -13,7 +13,7 @@ jobs:
           submodules: true
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: ShadowEngineTeam/setup-haxe@main
         with:
           haxe-version: 4.3.7
 
@@ -48,10 +48,10 @@ jobs:
           mkdir ./ndll
 
       - name: Rebuild Lime (x86_64)
-        run: haxelib run lime rebuild linux -64 -nocolor -eval
+        run: haxelib run lime rebuild linux -64 -nocolor -eval -release
 
       - name: Rebuild Lime (Hashlink)
-        run: haxelib run lime rebuild hl -nocolor
+        run: haxelib run lime rebuild hl -nocolor -release
 
       - name: Upload Artifact (ndll/Linux64)
         uses: actions/upload-artifact@v7.0.0
