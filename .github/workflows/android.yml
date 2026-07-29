@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: "zulu"
-          java-version: 17
+          java-version: 21
 
       - name: Set HAXEPATH
         run: echo "HAXEPATH=$HAXE_STD_PATH/.." >> $GITHUB_ENV
@@ -43,7 +43,7 @@ jobs:
           haxelib dev lime ${{ github.workspace }}
           export ANDROID_SDK=$ANDROID_HOME
           export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
-          export JAVA_HOME=$JAVA_HOME_17_arm64
+          export JAVA_HOME=$JAVA_HOME_21_arm64
           export ANDROID_SETUP=true
           haxelib run lime setup android -alias -y -nocffi -eval
 
