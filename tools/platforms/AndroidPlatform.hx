@@ -130,6 +130,15 @@ class AndroidPlatform extends PlatformTarget
 		var hxml = targetDirectory + "/haxe/" + buildType + ".hxml";
 		var sourceSet = destination + "/app/src/main";
 
+		if (project.targetFlags.exists("ONLY_ARMV7"))
+			project.architectures = [Architecture.ARMV7];
+		else if (project.targetFlags.exists("ONLY_ARM64"))
+			project.architectures = [Architecture.ARM64];
+		else if (project.targetFlags.exists("ONLY_X86"))
+			project.architectures = [Architecture.X86];
+		else if (project.targetFlags.exists("ONLY_X86_64"))
+			project.architectures = [Architecture.X64];
+		
 		var hasARM64 = ArrayTools.containsValue(project.architectures, Architecture.ARM64);
 		var hasARMV7 = ArrayTools.containsValue(project.architectures, Architecture.ARMV7);
 		var hasX64 = ArrayTools.containsValue(project.architectures, Architecture.X64);
@@ -377,6 +386,27 @@ class AndroidPlatform extends PlatformTarget
 		var platformNumberDefine = '-DHXCPP_ANDROID_PLATFORM=$minSDKVer';
 		var platformDefine = '-DPLATFORM=android-$minSDKVer';
 
+		if (project.targetFlags.exists("ONLY_ARM64"))
+		{
+			arm64 = true;
+			armv7 = x86 = x64 = false;
+		}
+		else if (project.targetFlags.exists("ONLY_ARMV7"))
+		{
+			armv7 = true;
+			arm64 = x86 = x64 = false;
+		}
+		else if (project.targetFlags.exists("ONLY_X86_64"))
+		{
+			x64 = true;
+			arm64 = armv7 = x86 = false;
+		}
+		else if (project.targetFlags.exists("ONLY_X86"))
+		{
+			x86 = true;
+			arm64 = armv7 = x64 = false;
+		}
+		
 		var commands:Array<Array<String>> = [];
 
 		if (arm64) commands.push(["-Dandroid", "-DHXCPP_ARM64", platformDefine, platformNumberDefine]);
@@ -448,12 +478,12 @@ class AndroidPlatform extends PlatformTarget
 			}
 		}
 
-		context.ANDROID_MINIMUM_SDK_VERSION = project.config.getInt("android.minimum-sdk-version", 28);
+		context.ANDROID_MINIMUM_SDK_VERSION = project.config.getInt("android.minimum-sdk-version", 24);
 		context.ANDROID_TARGET_SDK_VERSION = project.config.getInt("android.target-sdk-version", 36);
 		context.ANDROID_EXTENSIONS = project.config.getArrayString("android.extension");
 		context.ANDROID_PERMISSIONS = project.config.getArrayString("android.permission", []);
-		context.ANDROID_GRADLE_VERSION = project.config.getString("android.gradle-version", "8.9");
-		context.ANDROID_GRADLE_PLUGIN = project.config.getString("android.gradle-plugin", "8.7.3");
+		context.ANDROID_GRADLE_VERSION = project.config.getString("android.gradle-version", "8.13");
+		context.ANDROID_GRADLE_PLUGIN = project.config.getString("android.gradle-plugin", "8.12.0");
 		context.ANDROID_USE_ANDROIDX = project.config.getString("android.useAndroidX", "true");
 		context.ANDROID_ENABLE_JETIFIER = project.config.getString("android.enableJetifier", "false");
 		context.ANDROID_GRADLE_PROPERTIES = project.config.getKeyValueArray("android.gradle-properties");
